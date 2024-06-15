@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@shoppingappkec/common": "^1.0.6",
+    "@shoppingappkec/common": "^1.0.14",
     "@types/body-parser": "^1.19.5",
     "@types/cookie-session": "^2.0.48",
     "@types/cors": "^2.8.17",
