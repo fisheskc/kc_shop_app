@@ -44,6 +44,9 @@ export class AppModule {
             if (!process.env.JWT_KEY) {
                 throw new Error('mongo_uri must be defined');
             }
+            if(!process.env.STRIPE_KEY) {
+                throw new Error('STRIPE_KEY must be defined');
+            }
             try {
                 // console.log(process.env.MONGO_URI)
                 await mongoose.connect(process.env.MONGO_URI);
