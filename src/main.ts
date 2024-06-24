@@ -6,7 +6,9 @@ import { JwtPayload } from '@shoppingappkec/common';
 declare global {
     namespace Express {
         interface Request {
-            currentUser?: JwtPayload
+            currentUser?: JwtPayload;
+            // type error & not required
+            uploaderError?: Error
         }
     }
 }

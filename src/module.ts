@@ -8,11 +8,12 @@ import express from 'express'
 import cookieSession from 'cookie-session'; 
 import mongoose from 'mongoose'
 import { authRouters } from './auth/auth.routers'
+import { sellerRouters } from './seller/seller.routers'
 
 import { errorHandler, currentUser } from '@shoppingappkec/common';
 
 // import { sellerRouters } from './seller/seller.routers'
-// import { buyerRouters } from './buyer/buyer.routers'
+
 export class AppModule {
     constructor(public app: Application) {
         app.set('trust-proxy', true);
@@ -32,11 +33,6 @@ export class AppModule {
             secure: false
         }));
 
-        this.app.use(currentUser(process.env.JWT_KEY!))
-        this.app.use(authRouters)
-        // errorHandler - NPM middleware 
-        this.app.use(errorHandler)
-
         Object.setPrototypeOf(this, AppModule.prototype)
     }
 
@@ -48,12 +44,24 @@ export class AppModule {
             if (!process.env.JWT_KEY) {
                 throw new Error('mongo_uri must be defined');
             }
+            if(!process.env.STRIPE_KEY) {
+                throw new Error('STRIPE_KEY must be defined');
+            }
             try {
                 // console.log(process.env.MONGO_URI)
                 await mongoose.connect(process.env.MONGO_URI);
             } catch (err) {
                 throw new Error('database connection error');
             }
+
+            // We use the middleware here inside app module so that all the routers will get the current user
+            // We can make sure that we are actually getting the JWT key from the env file
+            this.app.use(currentUser(process.env.JWT_KEY!))
+            this.app.use(authRouters)
+            this.app.use(sellerRouters)
+            // errorHandler - NPM middleware 
+            this.app.use(errorHandler)
+
             this.app.use(currentUser(process.env.JWT_KEY!))
             
             // app.use(errorHandler)
